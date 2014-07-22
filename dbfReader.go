@@ -74,7 +74,8 @@ func RemoveNullfrombyte(b []byte) (s string) {
 func GetFields(reader *os.File) []Field {
     dbfhead := GetDbfHead(reader)
 
-    off := dbfhead.Headerlen - 32 - 264
+//    off := dbfhead.Headerlen - 32 - 264
+    off := dbfhead.Headerlen - 32 - 1
     //fmt.Println(off)
     fieldlist := make([]Field, off/32)
     buf := make([]byte, off)
@@ -115,7 +116,8 @@ func GetRecords(fp *os.File) (records map[int]Record) {
     recordlen := dbfhead.Recordlen
     start := dbfhead.Headerlen
     buf := make([]byte, recordlen)
-    i := 1
+    i := 0
+//    i := 1
     temp := map[int]Record{}
     for {
         _, err := fp.ReadAt(buf, start)
@@ -125,7 +127,7 @@ func GetRecords(fp *os.File) (records map[int]Record) {
         }
         //fmt.Printf("%s\n", buf)
         record := Record{}
-        //fmt.Println(string(buf[0:1]))
+        // * 删除
         if string(buf[0:1]) == " " {
             record.Delete = true
         } else if string(buf[0:1]) == "*" {
@@ -158,7 +160,7 @@ func GetRecordbyField(fieldname string, fieldval string, fp *os.File) (record ma
     fields := GetFields(fp)
     records := GetRecords(fp)
     temp := map[int]Record{}
-    i := 1
+    i := 0
     for _, val := range records {
         for _, val1 := range fields {
             if val1.Name == fieldname && val.Delete {
