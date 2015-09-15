@@ -58,7 +58,8 @@ func RemoveNullfrombyte(b []byte) (s string) {
 func GetFields(reader *bytes.Reader) []Field {
 	dbfhead := GetDbfHead(reader)
 
-	off := dbfhead.Headerlen - 32 - 264
+	// off := dbfhead.Headerlen - 32 - 264
+	off := dbfhead.Headerlen - 8
 	fieldlist := make([]Field, off/32)
 	buf := make([]byte, off)
 	_, err := reader.ReadAt(buf, 32)
